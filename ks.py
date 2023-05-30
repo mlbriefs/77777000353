@@ -12,9 +12,9 @@ def gaussian_image_drawer(
 
 
 def estimate_residual_noise(x):
-	from numpy import sqrt
-	from numpy.linalg import norm
-	return norm(x) / sqrt(x.shape[0] * x.shape[1])
+	n = x.flatten().T @ x.flatten()
+	N = x.shape[0] * x.shape[1]
+	return (n / N)**0.5
 
 
 # Kadkhodaie Simoncelli dynamics
@@ -31,7 +31,7 @@ def kadkhodaie_simoncelli(
 	σ = σ_0
 	t = 1
 	y = gaussian_image_drawer(s, 0.5, σ ** 2, t-1)
-	while σ > σ_L and t < 100:
+	while σ > σ_L and t < 150:
 		h = h_0 * t / (1 + h_0 * (t - 1))
 		d = D(y) - y
 		σ = estimate_residual_noise(d)
