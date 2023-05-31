@@ -1,31 +1,53 @@
 
 
-/general/demo_title=implicit noise models of classical denoisers
+/general/demo_title=Kadkhodaie-Simoncelli dynamics
+#/general/demo_title=implicit noise models of classical denoisers
 /general/requirements=docker
 
 /build/url=git@github.com:mlbriefs/77777000353.git
 /build/rev=origin/main
 /build/dockerfile=.ipol/Dockerfile
 
-/inputs/0/description=input
-/inputs/0/max_pixels=2048*2048
-/inputs/0/dtype=x8i
-/inputs/0/ext=.png
-/inputs/0/type=image
-
 # look, a comment!
 
-/params/0/id=sigma
-/params/0/label=sigma
-/params/0/comments=Noise standard deviation
+/params/0/id=sigma0
+/params/0/label=σ<sub>0</sub>
+/params/0/comments=starting sigma
 /params/0/type=range
-/params/0/values/default=30
-/params/0/values/max=300
+/params/0/values/default=0.1
+/params/0/values/max=1
 /params/0/values/min=0
-/params/0/values/step=0.1
+/params/0/values/step=0.0001
+
+/params/1/id=sigmaL
+/params/1/label=σ<sub>L</sub>
+/params/1/comments=last sigma
+/params/1/type=range
+/params/1/values/default=0.01
+/params/1/values/max=1
+/params/1/values/min=0
+/params/1/values/step=0.00001
+
+/params/2/id=h0
+/params/2/label=h<sub>0</sub>
+/params/2/comments=starting h
+/params/2/type=range
+/params/2/values/default=0.1
+/params/2/values/max=1
+/params/2/values/min=0
+/params/2/values/step=0.0001
+
+/params/3/id=beta
+/params/3/label=β
+/params/3/comments=beta
+/params/3/type=range
+/params/3/values/default=0.99
+/params/3/values/max=1
+/params/3/values/min=0
+/params/3/values/step=0.0001
+
 
 /results/0/type=gallery
-/results/0/contents/Input/img=input_0.png
 /results/0/contents/Output/img=output.png
 
 /results/1/contents=stdout.txt
@@ -33,7 +55,6 @@
 /results/1/type=text_file
 
 /archive/enable_reconstruct=true
-/archive/files/input_0.png=Input
 /archive/files/output.png=Output
 /archive/info/run_time=run time
 
