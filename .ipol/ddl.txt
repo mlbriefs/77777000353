@@ -1,29 +1,40 @@
-/general/demo_title=Enric MEINHARDT-LLOPIS's MLBriefs3 demo
+
+
+/general/demo_title=implicit noise models of classical denoisers
 /general/requirements=docker
+
 /build/url=git@github.com:mlbriefs/77777000353.git
 /build/rev=origin/main
 /build/dockerfile=.ipol/Dockerfile
+
 /inputs/0/description=input
-/inputs/0/max_pixels=3000*3000
+/inputs/0/max_pixels=2048*2048
 /inputs/0/dtype=x8i
 /inputs/0/ext=.png
 /inputs/0/type=image
+
+# look, a comment!
+
 /params/0/id=sigma
 /params/0/label=sigma
 /params/0/comments=Noise standard deviation
 /params/0/type=range
-/params/0/values/default="30
+/params/0/values/default=30
 /params/0/values/max=300
 /params/0/values/min=0
 /params/0/values/step=0.1
+
 /results/0/type=gallery
 /results/0/contents/Input/img=input_0.png
 /results/0/contents/Output/img=output.png
+
 /results/1/contents=stdout.txt
 /results/1/label=<p>Output</p>
 /results/1/type=text_file
+
 /archive/enable_reconstruct=true
 /archive/files/input_0.png=Input
 /archive/files/output.png=Output
 /archive/info/run_time=run time
+
 /run=python $bin/main.py --input $input_0 --sigma $sigma --output output.png

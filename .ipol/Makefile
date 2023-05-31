@@ -1,3 +1,5 @@
-ddl.json: ddl.txt ; 2json $^ 2>/dev/null >$@
+ddl.json: ddl.txt
+	cat $^ | sed 's/^#.*//' | awk NF | 2json > $@
 
-clean: ; $(RM) ddl.json
+clean:
+	$(RM) ddl.json
