@@ -1,0 +1,16 @@
+Non-Local Means Denoising
+http://www.ipol.im/pub/art/2011/bcm_nlm/
+
+DCT Denoising
+http://www.ipol.im/pub/art/2011/ys-dct/
+
+Rudin-Osher-Fatemi Total Variation Denoising using Split Bregman
+http://www.ipol.im/pub/art/2012/g-tvd/
+
+Implementation of the "Non-Local Bayes" (NL-Bayes) Image Denoising Algorithm
+http://www.ipol.im/pub/art/2013/16/
+
+An Analysis and Implementation of the BM3D Image Denoising Method
+http://www.ipol.im/pub/art/2012/l-bm3d/
+
+

@@ -58,4 +58,4 @@
 /archive/files/output.png=Output
 /archive/info/run_time=run time
 
-/run=python $bin/main.py --input $input_0 --sigma $sigma --output output.png
+/run=python $bin/ks.py -b $beta -s0 $sigma0 -sL $sigmaL -h0 $h0 -o output.png

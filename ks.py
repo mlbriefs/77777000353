@@ -11,12 +11,6 @@ def gaussian_image_drawer(
 	return μ + σ*x
 
 
-def estimate_residual_noise(x):
-	n = x.flatten().T @ x.flatten()
-	N = x.shape[0] * x.shape[1]
-	return (n / N)**0.5
-
-
 # Kadkhodaie Simoncelli dynamics
 # "Solving Linear Inverse Problems Using the Prior Implicit in a Denoiser"
 # Implementation of Algorithm 1 from https://arxiv.org/abs/2007.13640
@@ -34,7 +28,7 @@ def kadkhodaie_simoncelli(
 	while σ > σ_L and t < 150:
 		h = h_0 * t / (1 + h_0 * (t - 1))
 		d = D(y) - y
-		σ = estimate_residual_noise(d)
+		σ = (x.flatten().T @ x.flatten() / x.size)**0.5;
 		γ = ((1 - β*h)**2 - (1 - h)**2)**0.5 * σ
 		z = gaussian_image_drawer(s, 0, 1, t)
 		y = y + h*d + γ*z
@@ -42,6 +36,7 @@ def kadkhodaie_simoncelli(
 		t = t + 1
 	return y
 
+# sample denoiser
 def denoiser_median49(x):
 	# <x morsi disk4.9 median >y
 	# todo: rewrite with pipes
@@ -55,3 +50,32 @@ def denoiser_median49(x):
 	os.unlink(X)
 	os.unlink(Y)
 	return y
+
+
+# extract a named option from the command line arguments (sys.argv is edited)
+def pick_option(
+		o,  # option name, including hyphens
+		d   # default value
+		):
+	from sys import argv as v
+	return type(d)(v[v.index(o)+1]) if o in v else d
+
+
+# main function
+if __name__ == "__main__":
+	d  = pick_option("-D", "median49")  # denoiser
+	w  = pick_option("-w", 256)         # output image width
+	h  = pick_option("-h", 256)         # output image height
+	β  = pick_option("-b", 1)           # beta (1 - temperature)
+	σ0 = pick_option("-s0", 1)          # first sigma
+	σL = pick_option("-sL", 0.001)      # last sigma
+	h0 = pick_option("-h0", 0.1)        # first h
+	o  = pick_option("-o", "out.npy")   # output filename
+
+	print(f"w={w} h={h} β={β} D={D}")
+
+	D = denoiser_median49
+	x = kadkhodaie_simoncelli((h,w), D, σ0, σL, h0, β)
+
+	import iio
+	iio.write(o, x)
