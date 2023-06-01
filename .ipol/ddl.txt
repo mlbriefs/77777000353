@@ -22,7 +22,7 @@
 /params/1/label=σ<sub>L</sub>
 /params/1/comments=last sigma
 /params/1/type=range
-/params/1/values/default=0.01
+/params/1/values/default=0.001
 /params/1/values/max=1
 /params/1/values/min=0
 /params/1/values/step=0.00001
