@@ -72,7 +72,7 @@ if __name__ == "__main__":
 	h0 = pick_option("-h0", 0.1)        # first h
 	o  = pick_option("-o", "out.npy")   # output filename
 
-	print(f"w={w} h={h} β={β} D={D}")
+	print(f"w={w} h={h} β={β} D={d}")
 
 	D = denoiser_median49
 	x = kadkhodaie_simoncelli((h,w), D, σ0, σL, h0, β)
