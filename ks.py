@@ -66,8 +66,8 @@ if __name__ == "__main__":
 	d  = pick_option("-D", "median49")  # denoiser
 	w  = pick_option("-w", 256)         # output image width
 	h  = pick_option("-h", 256)         # output image height
-	β  = pick_option("-b", 1)           # beta (1 - temperature)
-	σ0 = pick_option("-s0", 1)          # first sigma
+	β  = pick_option("-b", 1.0)         # beta (1 - temperature)
+	σ0 = pick_option("-s0", 1.0)        # first sigma
 	σL = pick_option("-sL", 0.001)      # last sigma
 	h0 = pick_option("-h0", 0.1)        # first h
 	o  = pick_option("-o", "out.npy")   # output filename

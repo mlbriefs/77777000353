@@ -1,7 +1,6 @@
 
 
 /general/demo_title=Kadkhodaie-Simoncelli dynamics
-#/general/demo_title=implicit noise models of classical denoisers
 /general/requirements=docker
 
 /build/url=git@github.com:mlbriefs/77777000353.git
