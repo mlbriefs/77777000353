@@ -52,6 +52,15 @@ def denoiser_median49(x):
 	return y
 
 
+def qauto(x):
+	y = x.flatten().copy()
+	y.sort()
+	n = y.size
+	m = y[5*n//100]
+	M = y[95*n//100]
+	return 255 * (x - m) / (M - m)
+
+
 # extract a named option from the command line arguments (sys.argv is edited)
 def pick_option(
 		o,  # option name, including hyphens
@@ -59,6 +68,10 @@ def pick_option(
 		):
 	from sys import argv as v
 	return type(d)(v[v.index(o)+1]) if o in v else d
+
+if __name__ == "__main__":
+	import sys
+	print(f"sys.argv={sys.argv}")
 
 
 # main function
@@ -78,4 +91,5 @@ if __name__ == "__main__":
 	x = kadkhodaie_simoncelli((h,w), D, σ0, σL, h0, β)
 
 	import iio
-	iio.write(o, x)
+	y = qauto(x)
+	iio.write(o, y)
