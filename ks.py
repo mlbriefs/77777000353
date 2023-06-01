@@ -28,7 +28,7 @@ def kadkhodaie_simoncelli(
 	while σ > σ_L and t < 150:
 		h = h_0 * t / (1 + h_0 * (t - 1))
 		d = D(y) - y
-		σ = (y.flatten().T @ y.flatten() / y.size)**0.5;
+		σ = (d.flatten().T @ d.flatten() / d.size)**0.5;
 		γ = ((1 - β*h)**2 - (1 - h)**2)**0.5 * σ
 		z = gaussian_image_drawer(s, 0, 1, t)
 		y = y + h*d + γ*z
