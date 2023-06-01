@@ -13,7 +13,7 @@
 /params/0/label=σ<sub>0</sub>
 /params/0/comments=starting sigma
 /params/0/type=range
-/params/0/values/default=0.1
+/params/0/values/default=1.0
 /params/0/values/max=1
 /params/0/values/min=0
 /params/0/values/step=0.0001
@@ -40,7 +40,7 @@
 /params/3/label=β
 /params/3/comments=beta
 /params/3/type=range
-/params/3/values/default=0.99
+/params/3/values/default=1.0
 /params/3/values/max=1
 /params/3/values/min=0
 /params/3/values/step=0.0001

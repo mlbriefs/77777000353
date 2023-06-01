@@ -7,7 +7,10 @@ def gaussian_image_drawer(
 		):
 	import os, iio
 	os.environ["SRAND"] = f"{r}"
-	x = iio.read(f"TRANS[pipe=plambda randg]:zero:{s[0]}x{s[1]}")
+	if σ > 0:
+		x = iio.read(f"TRANS[pipe=plambda randg]:zero:{s[0]}x{s[1]}")
+	else:
+		x = iio.read(f"zero:{s[0]}x{s[1]}")
 	return μ + σ*x
 
 
