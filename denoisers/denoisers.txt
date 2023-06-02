@@ -13,4 +13,11 @@ http://www.ipol.im/pub/art/2013/16/
 An Analysis and Implementation of the BM3D Image Denoising Method
 http://www.ipol.im/pub/art/2012/l-bm3d/
 
+Data Adaptive Dual Domain Denoising: a Method to Boost State of the Art Denoising Algorithms
+http://www.ipol.im/pub/art/2017/203/
 
+Multi-Scale DCT Denoising
+http://www.ipol.im/pub/art/2017/201/
+
+An Analysis and Implementation of the FFDNet Image Denoising Method
+http://www.ipol.im/pub/art/2019/231/

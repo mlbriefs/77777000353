@@ -64,17 +64,13 @@ def qauto(x):
 	return 255 * (x - m) / (M - m)
 
 
-# extract a named option from the command line arguments (sys.argv is edited)
+# extract a named option from the command line arguments
 def pick_option(
 		o,  # option name, including hyphens
 		d   # default value
 		):
 	from sys import argv as v
 	return type(d)(v[v.index(o)+1]) if o in v else d
-
-if __name__ == "__main__":
-	import sys
-	print(f"sys.argv={sys.argv}")
 
 
 # main function
