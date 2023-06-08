@@ -23,12 +23,13 @@ def kadkhodaie_simoncelli(
 		σ_0,   # starting sigma
 		σ_L,   # last sigma
 		h_0,   # starting h
-		β      # neg-temperature (set to 1 for pure hallucination)
+		β,     # neg-temperature (set to 1 for pure hallucination)
+		n      # hard limit for the number of iterations
 		):
 	σ = σ_0
 	t = 1
 	y = gaussian_image_drawer(s, 0.5, σ ** 2, t-1)
-	while σ > σ_L and t < 150:
+	while σ > σ_L and t < n:
 		h = h_0 * t / (1 + h_0 * (t - 1))
 		d = D(y) - y
 		σ = (d.flatten().T @ d.flatten() / d.size)**0.5;
@@ -54,13 +55,49 @@ def denoiser_median49(x):
 	os.unlink(Y)
 	return y
 
+# higher order function to create normalized denoisers
+# input: a denoiser for images in the range [0,255]
+# output: a denoiser for 0-centered images
+# parameter: s = scale in 8-bit units
+def normalized_denoiser(d, s=42):
+	def f(x):
+		y = 127 + s*x
+		X = (d(y) - 127)/s
+		return X
+	return f
+
+# same as above, but with a sigma
+def normalized_denoiser_with_sigma(d, s=42, σ=10):
+	def f(x):
+		y = 127 + s*x
+		z = (d(y, sigma=σ) - 127)/s
+		return X
+	return f
+
+def denoiser_ffdnet(x):
+	import ipol
+	ipol.DEBUG_LEVEL = 0
+	y = 127 + 21 * x
+	return (ipol.ffdnet(y, sigma=21)-127)/21
+
+def denoiser_nlm(x):
+	import ipol
+	ipol.DEBUG_LEVEL = 0
+	y = 127 + 21 * x
+	return (ipol.nlm(y, sigma=21)-127)/21
+
+def denoiser_dct(x):
+	import ipol
+	ipol.DEBUG_LEVEL = 0
+	y = 127 + 42 * x
+	return (ipol.dctdenoise(y, sigma=42)-127)/42
 
 def qauto(x):
 	y = x.flatten().copy()
 	y.sort()
 	n = y.size
-	m = y[5*n//100]
-	M = y[95*n//100]
+	m = y[1*n//100]
+	M = y[99*n//100]
 	return 255 * (x - m) / (M - m)
 
 
@@ -81,14 +118,16 @@ if __name__ == "__main__":
 	β  = pick_option("-b", 1.0)         # beta (1 - temperature)
 	σ0 = pick_option("-s0", 1.0)        # first sigma
 	σL = pick_option("-sL", 0.001)      # last sigma
+	n  = pick_option("-n", 1000)        # iteration limit
 	h0 = pick_option("-h0", 0.1)        # first h
 	o  = pick_option("-o", "out.npy")   # output filename
 
 	print(f"w={w} h={h} β={β} D={d}")
 
-	D = denoiser_median49
-	x = kadkhodaie_simoncelli((h,w), D, σ0, σL, h0, β)
+	D = denoiser_ffdnet
+	x = kadkhodaie_simoncelli((h,w), D, σ0, σL, h0, β, n)
 
 	import iio
-	y = qauto(x)
-	iio.write(o, y)
+	#y = qauto(x)
+	#iio.write(o, y)
+	iio.write(o, x)
