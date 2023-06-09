@@ -70,27 +70,10 @@ def normalized_denoiser(d, s=42):
 def normalized_denoiser_with_sigma(d, s=42, σ=10):
 	def f(x):
 		y = 127 + s*x
-		z = (d(y, sigma=σ) - 127)/s
+		X = (d(y, sigma=σ) - 127)/s
 		return X
 	return f
 
-def denoiser_ffdnet(x):
-	import ipol
-	ipol.DEBUG_LEVEL = 0
-	y = 127 + 21 * x
-	return (ipol.ffdnet(y, sigma=21)-127)/21
-
-def denoiser_nlm(x):
-	import ipol
-	ipol.DEBUG_LEVEL = 0
-	y = 127 + 21 * x
-	return (ipol.nlm(y, sigma=21)-127)/21
-
-def denoiser_dct(x):
-	import ipol
-	ipol.DEBUG_LEVEL = 0
-	y = 127 + 42 * x
-	return (ipol.dctdenoise(y, sigma=42)-127)/42
 
 def qauto(x):
 	y = x.flatten().copy()
@@ -120,11 +103,18 @@ if __name__ == "__main__":
 	σL = pick_option("-sL", 0.001)      # last sigma
 	n  = pick_option("-n", 1000)        # iteration limit
 	h0 = pick_option("-h0", 0.1)        # first h
+	σ  = pick_option("-s", 10)          # base denoiser sigma
+	s  = pick_option("-s", 42)          # base denoiser scale normalization
 	o  = pick_option("-o", "out.npy")   # output filename
 
 	print(f"w={w} h={h} β={β} D={d}")
 
-	D = denoiser_ffdnet
+	D = denoiser_median49
+	if d != "median49":
+		import ipol
+		ipol.DEBUG_LEVEL = 0
+		i = getattr(ipol, d)
+		D = normalized_denoiser_with_sigma(i, s, σ)
 	x = kadkhodaie_simoncelli((h,w), D, σ0, σL, h0, β, n)
 
 	import iio
