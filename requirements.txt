@@ -1,3 +1,0 @@
-numpy
-iio
-imscript
