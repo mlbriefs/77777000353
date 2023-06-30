@@ -17,8 +17,10 @@ def gaussian_image_drawer(
 # Kadkhodaie Simoncelli dynamics
 # "Solving Linear Inverse Problems Using the Prior Implicit in a Denoiser"
 # Implementation of Algorithm 1 from https://arxiv.org/abs/2007.13640
-# The arguments are the same as in the paper, except for "n", a hard-limit
-# for the total number of iterations, which is added here for convenience.
+# The arguments are the same as in the paper, except for "n", a hard-limit for
+# the total number of iterations, and "r", the seed for deterministic
+# pseudo-random number generation.  These parameters are just added for
+# convenience and reproducibility.
 def kadkhodaie_simoncelli_algorithm_1(
 		s,     # image shape (2 or 3-tuple)
 		D,     # denoiser
@@ -26,17 +28,18 @@ def kadkhodaie_simoncelli_algorithm_1(
 		σ_L,   # last sigma
 		h_0,   # starting h
 		β,     # neg-temperature (set to 1 for pure hallucination)
-		n      # hard limit for the number of iterations
+		n,     # hard limit for the number of iterations
+		r      # seed for the pseudo-random number generator
 		):
 	σ = σ_0
 	t = 1
-	y = gaussian_image_drawer(s, 0.5, σ ** 2, t-1)
+	y = gaussian_image_drawer(s, 0.5, σ ** 2, r+t-1)
 	while σ > σ_L and t < n:
 		h = h_0 * t / (1 + h_0 * (t - 1))
 		d = D(y) - y
 		σ = (d.flatten().T @ d.flatten() / d.size)**0.5;
 		γ = ((1 - β*h)**2 - (1 - h)**2)**0.5 * σ
-		z = gaussian_image_drawer(s, 0, 1, t)
+		z = gaussian_image_drawer(s, 0, 1, r+t)
 		y = y + h*d + γ*z
 		print(f"t={t} σ={σ} h={h} γ={γ}")
 		t = t + 1
@@ -133,6 +136,7 @@ if __name__ == "__main__":
 	σ  = pick_option("-s", 10)          # base denoiser sigma
 	s  = pick_option("-S", 42)          # base denoiser scale normalization
 	o  = pick_option("-o", "out.npy")   # output filename
+	r  = pick_option("-r", 100)         # random seed
 
 	print(f"w={w} h={h} β={β} D={d}")
 
@@ -142,7 +146,7 @@ if __name__ == "__main__":
 		ipol.DEBUG_LEVEL = 0
 		i = getattr(ipol, d)
 		D = normalized_denoiser_with_sigma(i, s, σ)
-	x = kadkhodaie_simoncelli_algorithm_1((h,w), D, σ0, σL, h0, β, n)
+	x = kadkhodaie_simoncelli_algorithm_1((h,w), D, σ0, σL, h0, β, n, r)
 
 	import iio
 	#y = qauto(x)
